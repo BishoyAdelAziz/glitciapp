@@ -10,6 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: #be2726;
+  --color-secondary: #575757;
+  --color-tertiary: #727272;
+  --color-quaternary: #9c9c9c;
+  --color-accent: #e53935;
+  --color-error: #e53935;
+  --color-success: #26a69a;
+  --color-warning: #ff9800;
+  --color-lable: #d1ece9;
+  --color-lablebg: #e7f4f2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +33,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+.react-tel-input .flag-dropdown {
+  width: 0px;
+}
+.react-tel-input .selected-flag {
+  margin-top: -2px;
+}
+.react-tel-input .selected-flag .arrow {
+  left: -22px !important;
+}
+
+select option:hover {
+  background-color: var(--color-primary) !important;
+  color: #ffffff;
 }
