@@ -1,26 +1,61 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import * as Chart from "chart.js";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarController,
+  LineController,
+  DoughnutController,
+} from "chart.js";
 
 // Register Chart.js components
-Chart.Chart.register(
-  Chart.CategoryScale,
-  Chart.LinearScale,
-  Chart.BarElement,
-  Chart.LineElement,
-  Chart.PointElement,
-  Chart.ArcElement,
-  Chart.Title,
-  Chart.Tooltip,
-  Chart.Legend,
-  Chart.BarController,
-  Chart.LineController,
-  Chart.DoughnutController
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarController,
+  LineController,
+  DoughnutController
 );
+
+interface Employee {
+  id: number;
+  name: string;
+  department: string;
+  completionRate: number;
+}
+
+interface Project {
+  id: number;
+  name: string;
+  department: string;
+  budget: number;
+  installments: number;
+  income: number;
+}
+
+interface DashboardData {
+  employees: Employee[];
+  projects: Project[];
+}
 
 const ManagementDashboard = () => {
   // Sample data - replace with your API calls
-  const [dashboardData, setDashboardData] = useState({
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
     employees: [
       { id: 1, name: "John Doe", department: "marketing", completionRate: 85 },
       { id: 2, name: "Jane Smith", department: "software", completionRate: 92 },
@@ -83,15 +118,20 @@ const ManagementDashboard = () => {
   });
 
   const chartRefs = {
-    departmentCapacity: useRef(null),
-    departmentIncome: useRef(null),
-    employeeCompletion: useRef(null),
-    projectCompletion: useRef(null),
+    departmentCapacity: useRef<HTMLCanvasElement>(null),
+    departmentIncome: useRef<HTMLCanvasElement>(null),
+    employeeCompletion: useRef<HTMLCanvasElement>(null),
+    projectCompletion: useRef<HTMLCanvasElement>(null),
   };
 
-  const chartInstances = useRef({});
+  const chartInstances = useRef<{ [key: string]: Chart | null }>({
+    departmentCapacity: null,
+    departmentIncome: null,
+    employeeCompletion: null,
+    projectCompletion: null,
+  });
 
-  // Your brand colors
+  // Brand colors
   const colors = {
     primary: "#be2726",
     secondary: "#575757",
@@ -150,9 +190,9 @@ const ManagementDashboard = () => {
 
   const metrics = calculateMetrics();
 
-  const destroyChart = (chartKey) => {
+  const destroyChart = (chartKey: string) => {
     if (chartInstances.current[chartKey]) {
-      chartInstances.current[chartKey].destroy();
+      chartInstances.current[chartKey]?.destroy();
       chartInstances.current[chartKey] = null;
     }
   };
@@ -165,7 +205,7 @@ const ManagementDashboard = () => {
 
     // 1. Department Capacity (Projects Count)
     if (chartRefs.departmentCapacity.current) {
-      chartInstances.current.departmentCapacity = new Chart.Chart(
+      chartInstances.current.departmentCapacity = new Chart(
         chartRefs.departmentCapacity.current,
         {
           type: "doughnut",
@@ -197,7 +237,7 @@ const ManagementDashboard = () => {
               },
               tooltip: {
                 callbacks: {
-                  label: (context) =>
+                  label: (context: any) =>
                     `${context.label}: ${context.parsed} projects`,
                 },
               },
@@ -209,7 +249,7 @@ const ManagementDashboard = () => {
 
     // 2. Department Income
     if (chartRefs.departmentIncome.current) {
-      chartInstances.current.departmentIncome = new Chart.Chart(
+      chartInstances.current.departmentIncome = new Chart(
         chartRefs.departmentIncome.current,
         {
           type: "bar",
@@ -237,7 +277,7 @@ const ManagementDashboard = () => {
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: (context) =>
+                  label: (context: any) =>
                     `Income: $${context.parsed.y.toLocaleString()}`,
                 },
               },
@@ -246,7 +286,7 @@ const ManagementDashboard = () => {
               y: {
                 beginAtZero: true,
                 ticks: {
-                  callback: (value) => "$" + value.toLocaleString(),
+                  callback: (value: any) => "$" + value.toLocaleString(),
                   font: { size: 11 },
                 },
                 grid: { color: "rgba(0,0,0,0.1)" },
@@ -263,7 +303,7 @@ const ManagementDashboard = () => {
 
     // 3. Employee Completion Rates
     if (chartRefs.employeeCompletion.current) {
-      chartInstances.current.employeeCompletion = new Chart.Chart(
+      chartInstances.current.employeeCompletion = new Chart(
         chartRefs.employeeCompletion.current,
         {
           type: "bar",
@@ -300,7 +340,7 @@ const ManagementDashboard = () => {
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: (context) => `Completion: ${context.parsed.y}%`,
+                  label: (context: any) => `Completion: ${context.parsed.y}%`,
                 },
               },
             },
@@ -309,7 +349,7 @@ const ManagementDashboard = () => {
                 beginAtZero: true,
                 max: 100,
                 ticks: {
-                  callback: (value) => value + "%",
+                  callback: (value: any) => value + "%",
                   font: { size: 11 },
                 },
                 grid: { color: "rgba(0,0,0,0.1)" },
@@ -329,7 +369,7 @@ const ManagementDashboard = () => {
 
     // 4. Project Completion Rates
     if (chartRefs.projectCompletion.current) {
-      chartInstances.current.projectCompletion = new Chart.Chart(
+      chartInstances.current.projectCompletion = new Chart(
         chartRefs.projectCompletion.current,
         {
           type: "line",
@@ -365,7 +405,7 @@ const ManagementDashboard = () => {
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: (context) =>
+                  label: (context: any) =>
                     `Completion: ${context.parsed.y.toFixed(1)}%`,
                 },
               },
@@ -375,7 +415,7 @@ const ManagementDashboard = () => {
                 beginAtZero: true,
                 max: 100,
                 ticks: {
-                  callback: (value) => value + "%",
+                  callback: (value: any) => value + "%",
                   font: { size: 11 },
                 },
                 grid: { color: "rgba(0,0,0,0.1)" },
@@ -398,7 +438,9 @@ const ManagementDashboard = () => {
     const timer = setTimeout(createCharts, 100);
     return () => {
       clearTimeout(timer);
-      Object.keys(chartInstances.current).forEach(destroyChart);
+      if (chartInstances.current) {
+        Object.keys(chartInstances.current).forEach(destroyChart);
+      }
     };
   }, [dashboardData]);
 
@@ -424,120 +466,108 @@ const ManagementDashboard = () => {
     dashboardMetrics.projectRates.length;
 
   return (
-    <div className="min-h-screen -mb-30 bg-gradient-to-br from-gray-100 to-gray-200 p-4 lg:p-6">
-      <div className="container  max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 p-4 lg:p-6">
+      <div className="container max-w-7xl mx-auto">
         {/* Header */}
-        <div>
-          <h3 className="text-4xl text-primary font-bold mb-6">
-            analysis overview
+        <div className="mb-8">
+          <h3 className="text-4xl text-red-700 font-bold mb-2 tracking-tight">
+            Analysis Overview
           </h3>
+          <div className="w-20 h-1 bg-red-700 rounded-full"></div>
         </div>
+
         {/* Summary Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-2 border-primary">
-            <h3 className="text-sm font-semibold mb-2 text-[#575757]">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-700 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-sm font-semibold mb-2 text-gray-600 uppercase tracking-wide">
               Total Projects
             </h3>
-            <div className="text-3xl font-bold text-primary ">
+            <div className="text-3xl font-bold text-red-700">
               {totalProjects}
             </div>
+            <div className="text-xs text-gray-500 mt-1">Active projects</div>
           </div>
 
-          <div
-            className="bg-white rounded-xl shadow-lg p-6 border-l-2"
-            style={{ borderLeftColor: "#be2726" }}
-          >
-            <h3
-              className="text-sm font-semibold mb-2"
-              style={{ color: "#575757" }}
-            >
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-700 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-sm font-semibold mb-2 text-gray-600 uppercase tracking-wide">
               Total Income
             </h3>
-            <div className="text-3xl font-bold" style={{ color: "#be2726" }}>
+            <div className="text-3xl font-bold text-red-700">
               ${totalIncome.toLocaleString()}
             </div>
+            <div className="text-xs text-gray-500 mt-1">Revenue generated</div>
           </div>
 
-          <div
-            className="bg-white rounded-xl shadow-lg p-6 border-l-2"
-            style={{ borderLeftColor: "#be2726" }}
-          >
-            <h3
-              className="text-sm font-semibold mb-2"
-              style={{ color: "#575757" }}
-            >
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-700 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-sm font-semibold mb-2 text-gray-600 uppercase tracking-wide">
               Active Employees
             </h3>
-            <div className="text-3xl font-bold" style={{ color: "#be2726" }}>
+            <div className="text-3xl font-bold text-red-700">
               {dashboardData.employees.length}
             </div>
+            <div className="text-xs text-gray-500 mt-1">Team members</div>
           </div>
 
-          <div
-            className="bg-white rounded-xl shadow-lg p-6 border-l-2"
-            style={{ borderLeftColor: "#be2726" }}
-          >
-            <h3
-              className="text-sm font-semibold mb-2"
-              style={{ color: "#575757" }}
-            >
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-700 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-sm font-semibold mb-2 text-gray-600 uppercase tracking-wide">
               Avg Completion
             </h3>
-            <div className="text-3xl font-bold" style={{ color: "#be2726" }}>
+            <div className="text-3xl font-bold text-red-700">
               {avgCompletionRate.toFixed(1)}%
             </div>
+            <div className="text-xs text-gray-500 mt-1">Overall progress</div>
           </div>
         </div>
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Projects Capacity by Department */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3
-              className="text-lg font-semibold mb-4 text-center"
-              style={{ color: "#575757" }}
-            >
-              Projects Capacity by Department
-            </h3>
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-red-700 rounded-full mr-3"></div>
+              <h3 className="text-lg font-semibold text-gray-700">
+                Projects Capacity by Department
+              </h3>
+            </div>
             <div className="relative h-80">
               <canvas ref={chartRefs.departmentCapacity}></canvas>
             </div>
           </div>
 
           {/* Income by Department */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3
-              className="text-lg font-semibold mb-4 text-center"
-              style={{ color: "#575757" }}
-            >
-              Income by Department
-            </h3>
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-red-700 rounded-full mr-3"></div>
+              <h3 className="text-lg font-semibold text-gray-700">
+                Income by Department
+              </h3>
+            </div>
             <div className="relative h-80">
               <canvas ref={chartRefs.departmentIncome}></canvas>
             </div>
           </div>
 
           {/* Employee Completion Rates */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3
-              className="text-lg font-semibold mb-4 text-center"
-              style={{ color: "#575757" }}
-            >
-              Employee Completion Rates
-            </h3>
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-red-700 rounded-full mr-3"></div>
+              <h3 className="text-lg font-semibold text-gray-700">
+                Employee Completion Rates
+              </h3>
+            </div>
             <div className="relative h-80">
               <canvas ref={chartRefs.employeeCompletion}></canvas>
             </div>
           </div>
 
           {/* Project Completion Rates */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3
-              className="text-lg font-semibold mb-4 text-center"
-              style={{ color: "#575757" }}
-            >
-              Project Completion Rates
-            </h3>
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-red-700 rounded-full mr-3"></div>
+              <h3 className="text-lg font-semibold text-gray-700">
+                Project Completion Rates
+              </h3>
+            </div>
             <div className="relative h-80">
               <canvas ref={chartRefs.projectCompletion}></canvas>
             </div>
@@ -547,11 +577,82 @@ const ManagementDashboard = () => {
         {/* Refresh Button */}
         <button
           onClick={refreshData}
-          className="fixed top-4 right-4 bg-white hover:bg-gray-50 text-sm font-semibold py-3 px-6 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-          style={{ color: "#be2726" }}
+          className="fixed top-6 right-6 bg-white hover:bg-gray-50 text-red-700 text-sm font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 hover:border-red-700"
         >
-          🔄 Refresh Data
+          <span className="mr-2">🔄</span>
+          Refresh Data
         </button>
+
+        {/* Department Summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+              <div className="w-2 h-2 bg-red-700 rounded-full mr-3"></div>
+              Marketing Department
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Projects:</span>
+                <span className="font-semibold text-red-700">
+                  {metrics.departmentCapacity.marketing}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Income:</span>
+                <span className="font-semibold text-red-700">
+                  ${metrics.departmentIncome.marketing.toLocaleString()}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-red-700 h-2 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${
+                      (metrics.departmentIncome.marketing /
+                        (metrics.departmentIncome.marketing +
+                          metrics.departmentIncome.software)) *
+                      100
+                    }%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+              <div className="w-2 h-2 bg-gray-600 rounded-full mr-3"></div>
+              Software Department
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Projects:</span>
+                <span className="font-semibold text-gray-700">
+                  {metrics.departmentCapacity.software}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Income:</span>
+                <span className="font-semibold text-gray-700">
+                  ${metrics.departmentIncome.software.toLocaleString()}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-gray-600 h-2 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${
+                      (metrics.departmentIncome.software /
+                        (metrics.departmentIncome.marketing +
+                          metrics.departmentIncome.software)) *
+                      100
+                    }%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
