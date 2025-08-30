@@ -5,7 +5,15 @@ import { getEmployees } from "./services/api";
 import Pagination from "@/components/Paginations/Pagination";
 import { useState } from "react";
 import { Employee } from "@/types/employee";
-
+interface TEmployee {
+  _id: string;
+  name: string;
+  email: string;
+  departmentDetails: { _id: number; name: string; id: string }[];
+  skillDetails: { _id: number; name: string; id: string }[];
+  positionDetails: { _id: string; name: string; id: string }[];
+  isActive: boolean;
+}
 export default function Employees() {
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
@@ -80,12 +88,12 @@ export default function Employees() {
             No employees found. Add your first employee!
           </div>
         ) : (
-          employees.map((employee) => (
+          employees.map((employee: TEmployee) => (
             <div
               key={employee._id}
               className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between h-full items-start">
                 <div>
                   <h4 className="font-semibold">{employee.name}</h4>
                   <p className="text-gray-600">{employee.email}</p>
