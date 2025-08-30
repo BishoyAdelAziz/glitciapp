@@ -75,6 +75,8 @@ const LoginPage = () => {
               placeholder="Your Email"
               register={register}
               errors={errors}
+              required
+              label="Email"
             />
 
             <PasswordInput
