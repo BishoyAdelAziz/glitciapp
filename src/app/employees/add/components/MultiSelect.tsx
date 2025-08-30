@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 import Label from "@/components/Forms/Label";
 import ValidationError from "@/components/Errors/validationError";
-import AddSkill from "./AddSkill";
+// import AddSkill from "./AddSkill";
 
 interface Option {
   id: string;
