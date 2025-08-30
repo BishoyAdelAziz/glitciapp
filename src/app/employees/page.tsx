@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getEmployees } from "./services/api";
 import Pagination from "@/components/Paginations/Pagination";
 import { useState } from "react";
-import { Employee } from "@/types/employee";
 interface TEmployee {
   _id: string;
   name: string;
