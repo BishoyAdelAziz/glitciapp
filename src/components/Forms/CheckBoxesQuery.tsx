@@ -1,3 +1,6 @@
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { getPositionSkills } from "@/app/employees/add/services/api";
 export default function CheckBoxesQuery({
   roleId,
   register,
@@ -9,7 +12,7 @@ export default function CheckBoxesQuery({
 }) {
   const { data: skills, isLoading } = useQuery({
     queryKey: [`role-skills`, roleId],
-    queryFn: () => getRoleSkills(roleId),
+    queryFn: () => getPositionSkills(roleId.toLocaleString()),
     enabled: !!roleId,
   });
 
