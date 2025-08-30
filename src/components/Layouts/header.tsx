@@ -14,11 +14,12 @@ interface Route {
 }
 
 const Routes: Route[] = [
-  { id: 1, label: "projects", link: "/projects" },
-  { id: 2, label: "clients", link: "/clients" },
-  { id: 3, label: "employees", link: "/employees" },
-  { id: 4, label: "Services", link: "/services" },
-  { id: 5, label: "finance", link: "/finance" },
+  { id: 1, label: "overview", link: "/overview" },
+  { id: 2, label: "projects", link: "/projects" },
+  { id: 3, label: "clients", link: "/clients" },
+  { id: 4, label: "employees", link: "/employees" },
+  { id: 5, label: "Services", link: "/services" },
+  { id: 6, label: "finance", link: "/finance" },
 ];
 
 // Role ring colors
@@ -82,7 +83,6 @@ export default function Header() {
     <>
       {/* Fixed header */}
       <header className="flex items-center justify-between md:justify-evenly bg-gray-100 dark:bg-zinc-800 px-4 py-1 shadow-md fixed w-full z-50 top-0 left-0">
-        {/* Logo */}
         <div>
           <Link href="/" aria-label="Home">
             {isLight !== undefined && (
@@ -129,7 +129,7 @@ export default function Header() {
           {/* User circle for desktop */}
           {userInfo && (
             <div
-              className={`hidden sm:flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white p-4 text-xl font-semibold text-[#BE2726] ring-4 ${getRingColor(
+              className={`hidden sm:flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white p-4 text-xl font-semibold text-[#BE2726] ring-4 ${getRingColor(
                 userInfo.role
               )}`}
               title={`${userInfo.name} (${userInfo.role})`}
