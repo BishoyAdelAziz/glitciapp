@@ -35,10 +35,10 @@ export const SelectInput = ({
 }: SelectProps) => {
   return (
     <div className={`w-full ${className}`}>
-      <Label id={name} label={label} required key={name} />
+      <Label name={name} id={name} label={label} required key={name} />
       <select
         id={name}
-        {...register(name, { required, setValueAs: (value) => [value] })}
+        {...register(name, { required, setValueAs: (value) => value })}
         disabled={disabled}
         className={`mt-1 block w-full rounded-[30px] border p-4 px-5 ring-black-400 focus-within:ring-1 ${
           disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white"

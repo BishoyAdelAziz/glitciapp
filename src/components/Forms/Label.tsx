@@ -1,21 +1,24 @@
-import React from "react";
-
+"use client";
 interface Props {
-  id: string;
+  name: string;
   label: string;
   required?: boolean;
+  id?: string;
 }
-const Label = ({ id, label, required }: Props) => {
+
+export default function Label({ name, label, required, id }: Props) {
   return (
-    <label htmlFor={id} className="mb-2 mx-2 block font-bold text-sm ">
+    <label
+      className="inline-flex items-center justify-center gap-1 font-bold text-black"
+      htmlFor={`${name}`}
+      id={id}
+    >
       {label}
       {required ? (
-        <span className="mx-[2px] text-red-500">*</span>
+        <span className="text-lg font-bold text-red-600">*</span>
       ) : (
-        <span className="text-xs text-gray-400">optional</span>
+        <p className="inline text-sm font-light text-gray-500">(optional)</p>
       )}
     </label>
   );
-};
-
-export default Label;
+}

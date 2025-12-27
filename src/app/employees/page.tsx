@@ -26,7 +26,6 @@ export default function Employees() {
     queryKey: ["employees", page, limit],
     queryFn: () => getEmployees(page, limit),
     placeholderData: (previousData) => previousData,
-    staleTime: 5 * 60 * 1000,
   });
   console.log(employeesData);
   if (isLoading) {

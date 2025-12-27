@@ -22,13 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="bg-black">
       <body
-        className={`${geistSans.variable} ${DMSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${DMSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <QueryProvider>
           <Header />
-          <main className="pt-30">{children}</main>
+          <main className="pt-30 ">{children}</main>
         </QueryProvider>
       </body>
     </html>
